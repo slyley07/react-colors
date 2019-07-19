@@ -2,56 +2,36 @@ import React, { Component } from 'react';
 import style from './Container.css';
 import Form from '../Form/Form';
 
-export default class Container extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      color: ''
-    }
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+class Container extends Component {
+  state = {
+    color: '',
   }
 
-  componentDidMount() {
-
-  }
-
-  // callBackendAPI() {
-  //   const response = fetch(path);
-  //   const body = response.json;
-  //
-  //   if (response.status !== 200) {
-  //     throw Error(body.message)
-  //   }
-  //
-  //   return body;
-  // }
-
-  handleChange(e) {
-    this.setState({
-      color: e.target.value
-    })
-  }
-
-  handleSubmit(e) {
-    e.preventDefault();
-    // let path = '/color/' + this.state.color;
-    fetch(`localhost:3001/color/${this.state.color}`, {mode: 'cors'})
-      .then(req => console.log(req))
-    //   .then()
+  handleSubmit = shade => {
+    const { color } = shade
+    const url = 'http://localhost:3001/color/' + color
+    fetch(url, {mode: 'cors'})
+      .then(result => result.json())
+      .then(result => {
+        this.setState({
+          color: result,
+        })
+      })
   }
 
   render() {
+    let bgColor = {
+      backgroundColor: this.state.color
+    }
+
     return (
       <div
-        className={style.container}>
+        style={bgColor}>
         <Form
-          handleChange={this.handleChange}
-          handleSubmit={this.handleSubmit}
-          color={this.state.color}/>
+          handleSubmit={this.handleSubmit} />
       </div>
     )
   }
 }
+
+export default Container;

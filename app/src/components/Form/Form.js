@@ -1,23 +1,54 @@
 import React, { Component } from 'react';
 import style from './Form.css';
 
-export default class Form extends Component {
+class Form extends Component {
   constructor(props) {
     super(props);
 
+    this.initialState = {
+      color: '',
+    }
+
+    this.state = this.initialState;
+  }
+
+  submitForm = (e) => {
+    e.preventDefault();
+    this.props.handleSubmit(this.state);
+    this.setState(this.initialState);
+  }
+
+  handleChange = event => {
+    const { name, value } = event.target;
+
+    this.setState({
+      [name]: value
+    })
   }
 
   render() {
+    const { color } = this.state;
+
     return(
-      <form>
+      <form
+        onSubmit={this.submitForm}>
+        <label>
+          Color
+        </label>
+
         <input
-          name='color'
           type='text'
-          onChange={this.props.handleChange} />
-        <button
-          onClick={this.props.handleSubmit}
-          >Change background</button>
+          name='color'
+          value={color}
+          onChange={this.handleChange} />
+
+        <input
+          type='button'
+          value='Change color'
+          onClick={this.submitForm} />
       </form>
     )
   }
 }
+
+export default Form;
